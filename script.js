@@ -2,23 +2,36 @@ async function sendMessage() {
   const input = document.getElementById("user-input");
   const chatBox = document.getElementById("chat-box");
 
-  const userText = input.value;
+  const userText = input.value.trim();
   if (!userText) return;
 
+  // Show user's message
   addMessage(userText, "user");
   input.value = "";
 
+  // Show typing indicator
   const typing = addMessage("Typing...", "bot");
 
-  const response = await fetch("https://strike-9c0k.onrender.com/chat", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ message: userText })
-  });
+  try {
+    const response = await fetch("https://strike-9c0k.onrender.com/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: userText })
+    });
 
-  const data = await response.json();
-  typing.remove();
-  addMessage(data.reply, "bot");
+    if (!response.ok) {
+      throw new Error(`Server error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    typing.remove();
+    addMessage(data.reply, "bot");
+
+  } catch (error) {
+    typing.remove();
+    addMessage(`Error: ${error.message}`, "bot");
+    console.error("Chatbot error:", error);
+  }
 }
 
 function addMessage(text, sender) {
