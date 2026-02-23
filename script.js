@@ -10,7 +10,7 @@ async function sendMessage() {
 
   const typing = addMessage("Typing...", "bot");
 
-  const response = await fetch("https://strike-9c0k.onrender.com", {
+  const response = await fetch("https://strike-9c0k.onrender.com/chat", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ message: userText })
