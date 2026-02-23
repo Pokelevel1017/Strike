@@ -25,10 +25,13 @@ app.post("/chat", async (req, res) => {
 
     res.json({ reply: completion.choices[0].message.content });
   } catch (error) {
+    console.error("OpenAI error:", error);
     res.status(500).json({ reply: "Error connecting to AI." });
   }
 });
 
-app.listen(3000, () => {
-  console.log("Server running on port 3000");
+app.get("/", (req, res) => res.send("Strike AI Backend is running!"));
+
+app.listen(process.env.PORT || 3000, () => {
+  console.log("Server running on port", process.env.PORT || 3000);
 });
